@@ -14,21 +14,21 @@ protected:
 	{
 		return(size == 0);
 	}
-	void percolateup()
+	void percolateup(int t)
 	{
-		int x = arr[size];
+		int x = arr[t];
 		int i;
-		for (i = size; i > 1 && (x < arr[i / 2]); i = i / 2)
+		for (i = t; i > 1 && (x < arr[i / 2]); i = i / 2)
 		{
 			arr[i] = arr[i / 2];
 		}
 		arr[i] = x;
 	}
-	void percolatedown()
+	void percolatedown(int t)
 	{
-		int x = arr[1];
+		int x = arr[t];
 		int i,child;
-		for (i = 1; i * 2 <= size; i=child)
+		for (i = t; i * 2 <= size; i=child)
 		{
 			child = i * 2;
 			if (child < size)
@@ -56,6 +56,7 @@ public:
 		capacity = n;
 		size = 0;
 	}
+	Heap(int *p ,int m,int n);
 	~Heap()
 	{
 		delete[]arr;
@@ -73,7 +74,7 @@ public:
 		{
 			size++;
 			arr[size] = x;
-			percolateup();
+			percolateup(size);
 		}
 	}
 	void remove(int &x)
@@ -83,23 +84,30 @@ public:
 			x = arr[1];
 			arr[1] = arr[size];
 			size--;
-			percolatedown();
+			percolatedown(1);
 		}
 	}
 
 };
+Heap::Heap(int *p,int m,int n)
+{
+	arr = new int[n];
+	capacity = n;
+	size = m;
+	for (int i = 1; i <= size; i++)
+	{
+		arr[i] = p[i - 1];
+	}
+	for (int i = size / 2; i > 0; i--)
+	{
+		percolatedown(i);
+	}
+}
 int main()
 {
-	Heap h(100);
-	h.inesrt(20);
-	h.inesrt(10);
-	h.inesrt(5);
-	h.inesrt(15);
-	h.inesrt(30);
-	h.inesrt(18);
-	int x;
-	h.remove(x);
-	cout << x << endl;
+	int arr[] = { 10,50,60,5,30,20 };
+	
+	Heap h(arr, 6, 10);
 	h.printheap();
 
 	return 0;
